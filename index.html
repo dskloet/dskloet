@@ -1,0 +1,51 @@
+<html>
+  <head>
+    <title>Sample web application</title>
+    <link rel="stylesheet" type="css/text" media="screen" href="sample.css"/>
+  </head>
+  <body>
+    <form id="formId">
+      Name
+      <input type="text" name="name" id="nameField"  />
+      <input type="submit" value="send" />
+    </form>
+
+    <div id="response">
+    </div>
+
+    <script src="js/common.js"></script>
+    <script>
+
+function onFormSubmit(e) {
+  e.preventDefault();
+
+  var nameField = document.getElementById('nameField');
+  var name = nameField.value;
+
+  var ajax = new Ajax();
+  ajax.addField('nameField');
+  ajax.send('/hello', onResponse, onError);
+
+  // Stop the form from actually submitting which would cause the page to reload.
+  return false;
+}
+
+function onResponse(response) {
+  var responseElement = document.getElementById('response');
+  responseElement.innerHTML = response;
+}
+
+function onError() {
+  alert('Something went wrong');
+}
+
+function init() {
+  var form = document.getElementById('formId');
+  form.addEventListener('submit', onFormSubmit);
+}
+
+window.addEventListener('load', init);
+
+    </script>
+  </body>
+</html>
