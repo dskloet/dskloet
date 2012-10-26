@@ -19,15 +19,9 @@
 function onFormSubmit(e) {
   e.preventDefault();
 
-  var nameField = document.getElementById('nameField');
-  var name = nameField.value;
-
   var ajax = new Ajax();
   ajax.addField('nameField');
   ajax.send('/hello', onResponse, onError);
-
-  // Stop the form from actually submitting which would cause the page to reload.
-  return false;
 }
 
 function onResponse(response) {

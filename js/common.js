@@ -11,7 +11,8 @@ Ajax.prototype.addParam = function(key, value) {
 };
 
 Ajax.prototype.addField = function(field) {
-  this.addParam(field, document.getElementById(field).value);
+  var element = document.getElementById(field);
+  this.addParam(element.name, element.value);
 };
 
 Ajax.prototype.send = function(url, onSuccess, onFailure) {

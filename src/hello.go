@@ -20,7 +20,7 @@ func handleHello(writer http.ResponseWriter, request *http.Request) {
 	}
 
 	var params TemplateParameters
-	params.Name = request.FormValue("nameField")
+	params.Name = request.FormValue("name")
 
 	buf := bytes.NewBuffer(make([]byte, 0, 0))
 	err = tpl.Execute(buf, &params)
