@@ -2,13 +2,15 @@ package sample
 
 import (
   "bytes"
+  "encoding/json"
   "fmt"
   "html/template"
   "net/http"
 )
 
-type TemplateParameters struct {
-  Name string
+type Name struct {
+  First string
+  Last string
 }
 
 func handleHello(writer http.ResponseWriter, request *http.Request) {
@@ -19,9 +21,13 @@ func handleHello(writer http.ResponseWriter, request *http.Request) {
     return
   }
 
-  var params TemplateParameters
-  name := request.FormValue("name")
-  params.Name = name
+  var params Name
+  nameJson := request.FormValue("nameJson")
+  err = json.Unmarshal([]byte(nameJson), &params)
+  if err != nil {
+    fmt.Fprintf(writer, "Error parsing JSON: %v", err)
+    return
+  }
 
   buf := bytes.NewBuffer(make([]byte, 0, 0))
   err = tpl.Execute(buf, &params)
@@ -31,7 +37,7 @@ func handleHello(writer http.ResponseWriter, request *http.Request) {
   }
 
   data := NewDataManager(request)
-  err = data.store(name)
+  err = data.store(params.First + " " + params.Last)
   if err != nil {
     fmt.Fprintf(writer, "Error storing entry: %v", err)
     return

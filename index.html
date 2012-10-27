@@ -6,7 +6,8 @@
   <body>
     <form id="formId">
       Name
-      <input type="text" name="name" id="nameField"  />
+      <input type="text" name="first" id="first"  />
+      <input type="text" name="last" id="last"  />
       <input type="submit" value="send" />
     </form>
     <form id="searchForm">
@@ -21,6 +22,11 @@
     <script src="js/common.js"></script>
     <script>
 
+function getValue(id) {
+  var element = document.getElementById(id);
+  return element && element.value;
+}
+
 function onSearch(e) {
   e.preventDefault();
 
@@ -33,7 +39,8 @@ function onFormSubmit(e) {
   e.preventDefault();
 
   var ajax = new Ajax();
-  ajax.addField('nameField');
+  var request = {first: getValue('first'), last: getValue('last')};
+  ajax.addParam('nameJson', JSON.stringify(request));
   ajax.send('/hello', onResponse, onError);
 }
 
