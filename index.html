@@ -9,12 +9,25 @@
       <input type="text" name="name" id="nameField"  />
       <input type="submit" value="send" />
     </form>
+    <form id="searchForm">
+      Search
+      <input type="text" name="name" id="nameSearch"  />
+      <input type="submit" value="search" />
+    </form>
 
     <div id="response">
     </div>
 
     <script src="js/common.js"></script>
     <script>
+
+function onSearch(e) {
+  e.preventDefault();
+
+  var ajax = new Ajax();
+  ajax.addField('nameSearch');
+  ajax.send('/search', onResponse, onError);
+}
 
 function onFormSubmit(e) {
   e.preventDefault();
@@ -36,6 +49,8 @@ function onError() {
 function init() {
   var form = document.getElementById('formId');
   form.addEventListener('submit', onFormSubmit);
+  var searchForm = document.getElementById('searchForm');
+  searchForm.addEventListener('submit', onSearch);
 }
 
 window.addEventListener('load', init);

@@ -1,0 +1,1 @@
+../../appengine/google_appengine/gofmt -w -s -tabs=false -tabwidth=2 src/*
