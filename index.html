@@ -32,7 +32,19 @@ function onSearch(e) {
 
   var ajax = new Ajax();
   ajax.addField('nameSearch');
-  ajax.send('/search', onResponse, onError);
+  ajax.send('/search', onSearchResults, onError);
+}
+
+function onSearchResults(responseJson) {
+  var response = JSON.parse(responseJson);
+  var list = document.createElement('ol');
+  for (var i = 0; i < response.length; i++) {
+    var item = document.createElement('li');
+    item.innerHTML = response[i].Time;
+    list.appendChild(item);
+  }
+  var container = document.getElementById('response');
+  container.appendChild(list);
 }
 
 function onFormSubmit(e) {

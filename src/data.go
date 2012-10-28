@@ -29,18 +29,13 @@ func (data *DataManager) store(name string) error {
   return err
 }
 
-func (data *DataManager) load(name string) (times []time.Time, err error) {
+func (data *DataManager) load(name string) (entries []Entry, err error) {
   query := datastore.NewQuery("Entry").
     Filter("Name=", name).Order("-Time").Limit(20)
-  var entries []Entry
   _, err = query.GetAll(data.context, &entries)
 
   if err != nil {
     return
-  }
-
-  for _, entry := range entries {
-    times = append(times, entry.Time)
   }
   return
 }

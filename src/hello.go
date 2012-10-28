@@ -11,11 +11,11 @@ import (
 
 type Name struct {
   First string
-  Last string
+  Last  string
 }
 
 func handleHello(writer http.ResponseWriter, request *http.Request) {
-  context := appengine.NewContext(request);
+  context := appengine.NewContext(request)
 
   tpl, err := template.ParseFiles("templates/hello.html")
   if err != nil {
