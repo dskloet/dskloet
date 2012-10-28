@@ -1,6 +1,7 @@
 package sample
 
 import (
+  "appengine"
   "bytes"
   "encoding/json"
   "fmt"
@@ -14,12 +15,14 @@ type Name struct {
 }
 
 func handleHello(writer http.ResponseWriter, request *http.Request) {
-  tpl, err := template.ParseFiles("templates/hello.html")
+  context := appengine.NewContext(request);
 
+  tpl, err := template.ParseFiles("templates/hello.html")
   if err != nil {
     fmt.Fprintf(writer, "Error parsing template: %v", err)
     return
   }
+  context.Debugf("Parsed template.")
 
   var params Name
   nameJson := request.FormValue("nameJson")
@@ -28,6 +31,7 @@ func handleHello(writer http.ResponseWriter, request *http.Request) {
     fmt.Fprintf(writer, "Error parsing JSON: %v", err)
     return
   }
+  context.Debugf("Parsed JSON: %v", params)
 
   buf := bytes.NewBuffer(make([]byte, 0, 0))
   err = tpl.Execute(buf, &params)
@@ -35,6 +39,7 @@ func handleHello(writer http.ResponseWriter, request *http.Request) {
     fmt.Fprintf(writer, "Error executing template: %v", err)
     return
   }
+  context.Debugf("Executed template: %v", buf)
 
   data := NewDataManager(request)
   err = data.store(params.First + " " + params.Last)
@@ -42,6 +47,7 @@ func handleHello(writer http.ResponseWriter, request *http.Request) {
     fmt.Fprintf(writer, "Error storing entry: %v", err)
     return
   }
+  context.Debugf("Stored data.")
 
   writer.Write(buf.Bytes())
 }
