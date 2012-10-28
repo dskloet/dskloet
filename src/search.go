@@ -8,7 +8,8 @@ import (
 
 func handleSearch(writer http.ResponseWriter, request *http.Request) {
   data := NewDataManager(request)
-  name := request.FormValue("name")
+  name := request.URL.Path[len("/search/"):]
+
   entries, err := data.load(name)
   if err != nil {
     fmt.Fprintf(writer, "Error loading entries: %v", err)

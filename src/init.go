@@ -6,5 +6,5 @@ import (
 
 func init() {
   http.HandleFunc("/hello", handleHello)
-  http.HandleFunc("/search", handleSearch)
+  http.HandleFunc("/search/", handleSearch)
 }
