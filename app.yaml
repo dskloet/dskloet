@@ -9,6 +9,10 @@ handlers:
   static_files: index.html
   upload: index\.html
 
+- url: /(.*\.html)
+  static_files: html/\1
+  upload: html/.*\.html
+
 - url: /(js/.*\.js)
   static_files: \1
   upload: js/.*\.js

@@ -3,7 +3,6 @@ package sample
 import (
   "appengine"
   "appengine/datastore"
-  "net/http"
   "time"
 )
 
@@ -16,9 +15,9 @@ type DataManager struct {
   context appengine.Context
 }
 
-func NewDataManager(request *http.Request) *DataManager {
+func NewDataManager(context appengine.Context) *DataManager {
   return &DataManager{
-    context: appengine.NewContext(request),
+    context: context,
   }
 }
 

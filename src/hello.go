@@ -41,7 +41,7 @@ func handleHello(writer http.ResponseWriter, request *http.Request) {
   }
   context.Debugf("Executed template: %v", buf)
 
-  data := NewDataManager(request)
+  data := NewDataManager(context)
   err = data.store(params.First + " " + params.Last)
   if err != nil {
     fmt.Fprintf(writer, "Error storing entry: %v", err)

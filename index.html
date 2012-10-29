@@ -28,19 +28,37 @@ function getValue(id) {
 }
 
 function onSearch(e) {
-  e.preventDefault();
+  e && e.preventDefault();
 
   var ajax = new Ajax();
   ajax.send('/search/' + escape(getValue('nameSearch')),
       onSearchResults, onError);
 }
 
+function login(url, callback) {
+  var iframe = document.createElement('iframe');
+  iframe.className = 'login';
+  iframe.src = url;
+  iframe.onload = function() {
+    if (iframe.contentWindow.location.href.indexOf(url) == -1) {
+      document.body.removeChild(iframe);
+      callback && callback();
+    }
+  }
+  document.body.appendChild(iframe);
+  iframe.focus();
+}
+
 function onSearchResults(responseJson) {
   var response = JSON.parse(responseJson);
+  if (response.LoginUrl) {
+    login(response.LoginUrl, onSearch);
+    return;
+  }
   var list = document.createElement('ol');
-  for (var i = 0; i < response.length; i++) {
+  for (var i = 0; i < response.Entries.length; i++) {
     var item = document.createElement('li');
-    item.innerHTML = response[i].Time;
+    item.innerHTML = response.Entries[i].Time;
     list.appendChild(item);
   }
   var container = document.getElementById('response');
