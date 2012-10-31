@@ -1,2 +1,2 @@
-VERSION=$(date +%y%m%d)
+VERSION=sample
 ~/appengine/google_appengine/appcfg.py --email=dskloet@gmail.com --oauth2 update --version=$VERSION .

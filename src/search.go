@@ -1,32 +1,25 @@
 package sample
 
 import (
-  "appengine"
-  "appengine/user"
   "encoding/json"
   "fmt"
   "net/http"
 )
 
+type SearchHandler Handler
+
 type SearchResponse struct {
-  LoginUrl string
   Entries []Entry
 }
 
-func handleSearch(writer http.ResponseWriter, request *http.Request) {
-  context := appengine.NewContext(request)
-  data := NewDataManager(context)
-  u := user.Current(context)
-
+func (h *SearchHandler) handle() {
   var response SearchResponse
 
-  if u == nil {
-    response.LoginUrl, _ = user.LoginURL(context, "/thanks.html")
-  } else {
-    name := request.URL.Path[len("/search/"):]
-    entries, err := data.load(name)
+  if h.user != nil {
+    name := h.httpRequest.URL.Path[len("/search/"):]
+    entries, err := h.data.load(name)
     if err != nil {
-      fmt.Fprintf(writer, "Error loading entries: %v", err)
+      fmt.Fprintf(h.writer, "Error loading entries: %v", err)
       return
     }
     response.Entries = entries
@@ -34,8 +27,13 @@ func handleSearch(writer http.ResponseWriter, request *http.Request) {
 
   resultJson, err := json.Marshal(response)
   if err != nil {
-    fmt.Fprintf(writer, "Error marshalling JSON: %v", err)
+    fmt.Fprintf(h.writer, "Error marshalling JSON: %v", err)
     return
   }
-  writer.Write(resultJson)
+  h.writer.Write(resultJson)
+}
+
+func handleSearch(writer http.ResponseWriter, request *http.Request) {
+  handler := SearchHandler(*NewHandler(writer, request))
+  handler.handle()
 }

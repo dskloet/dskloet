@@ -1,0 +1,29 @@
+<html>
+  <head>
+    <title>Sample web application</title>
+    <link rel="stylesheet" type="css/text" media="screen" href="sample.css"/>
+  </head>
+  <body>
+    <form id="formId">
+      Name
+      <input type="text" name="first" id="first"  />
+      <input type="text" name="last" id="last"  />
+      <input type="submit" value="send" />
+    </form>
+{{with .LoginUrl}}
+    <a href="{{.}}">Log in to search</a>
+{{else}}
+    <form id="searchForm">
+      Search
+      <input type="text" name="name" id="nameSearch"  />
+      <input type="submit" value="search" />
+    </form>
+{{end}}
+
+    <div id="response">
+    </div>
+
+    <script src="js/common.js"></script>
+    <script src="js/sample.js"></script>
+  </body>
+</html>
