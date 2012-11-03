@@ -9,6 +9,7 @@ import (
 type Handler struct {
   writer http.ResponseWriter
   httpRequest *http.Request
+  err error
   context appengine.Context
   user *user.User
   data *DataManager
@@ -17,10 +18,10 @@ type Handler struct {
 func NewHandler(writer http.ResponseWriter, request *http.Request) *Handler {
   context := appengine.NewContext(request)
   return &Handler{
-    writer,
-    request,
-    context,
-    user.Current(context),
-    NewDataManager(context),
+    writer: writer,
+    httpRequest: request,
+    context: context,
+    user: user.Current(context),
+    data: NewDataManager(context),
   }
 }

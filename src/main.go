@@ -10,6 +10,11 @@ import (
 type MainHandler Handler
 
 func (h *MainHandler) handle() {
+  if h.httpRequest.URL.Path != "/" {
+    h.writer.WriteHeader(404)
+    return
+  }
+
   tpl, err := template.ParseFiles("templates/index.html")
   if err != nil {
     fmt.Fprintf(h.writer, "Error parsing template: %v", err)
