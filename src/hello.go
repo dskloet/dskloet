@@ -1,7 +1,6 @@
 package sample
 
 import (
-  "bytes"
   "encoding/json"
   "fmt"
   "html/template"
@@ -32,13 +31,12 @@ func (h *HelloHandler) handle() {
   }
   h.context.Debugf("Parsed JSON: %v", params)
 
-  buf := bytes.NewBuffer(make([]byte, 0, 0))
-  err = tpl.Execute(buf, &params)
+  err = tpl.Execute(h.writer, &params)
   if err != nil {
     fmt.Fprintf(h.writer, "Error executing template: %v", err)
     return
   }
-  h.context.Debugf("Executed template: %v", buf)
+  h.context.Debugf("Executed template.")
 
   err = h.data.store(params.First + " " + params.Last)
   if err != nil {
@@ -46,8 +44,6 @@ func (h *HelloHandler) handle() {
     return
   }
   h.context.Debugf("Stored data.")
-
-  h.writer.Write(buf.Bytes())
 }
 
 func handleHello(writer http.ResponseWriter, request *http.Request) {
