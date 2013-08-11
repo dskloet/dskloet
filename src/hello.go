@@ -1,6 +1,7 @@
 package sample
 
 import (
+  "appengine/blobstore"
   "encoding/json"
   "fmt"
   "html/template"
@@ -12,6 +13,7 @@ type HelloHandler Handler
 type Name struct {
   First string
   Last  string
+  PhotoUrl string
 }
 
 func (h *HelloHandler) handle() {
@@ -22,11 +24,22 @@ func (h *HelloHandler) handle() {
   }
   h.context.Debugf("Parsed template.")
 
-  var params Name
-  nameJson := h.httpRequest.FormValue("nameJson")
-  err = json.Unmarshal([]byte(nameJson), &params)
+  blobs, other, err := blobstore.ParseUpload(h.httpRequest)
   if err != nil {
-    fmt.Fprintf(h.writer, "Error parsing JSON: %v", err)
+    fmt.Fprintf(h.writer, "Error parsing blobs: %v", err)
+    return
+  }
+
+  var params Name
+  nameJson := other.Get("nameJson")
+  err = json.Unmarshal([]byte(nameJson), &params)
+
+  if photoBlob, present := blobs["photo"]; present {
+    params.PhotoUrl = "/photo/" + string(photoBlob[0].BlobKey)
+  }
+
+  if err != nil {
+    fmt.Fprintf(h.writer, "Error parsing JSON: %v [%v]", err, nameJson)
     return
   }
   h.context.Debugf("Parsed JSON: %v", params)

@@ -1,13 +1,9 @@
 var Ajax = function() {
-  this.params = [];
+  this.formData = new FormData();
 };
 
 Ajax.prototype.addParam = function(key, value) {
-  if (value !== undefined) {
-    this.params.push(encodeURIComponent(key) + '=' + encodeURIComponent(value));
-  } else {
-    this.params.push(encodeURIComponent(key));
-  }
+  this.formData.append(key, value || '');
 };
 
 Ajax.prototype.addField = function(field) {
@@ -28,11 +24,6 @@ Ajax.prototype.send = function(url, onSuccess, onFailure) {
   }
   http.open('POST', url, true);
 
-  var paramString = this.params.join('&');
-  http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  //http.setRequestHeader("Content-length", paramString.length);
-  //http.setRequestHeader("Connection", "close");
-
   http.onreadystatechange = function() {
     if(http.readyState == 4) {
       if (http.status == 200) {
@@ -42,5 +33,5 @@ Ajax.prototype.send = function(url, onSuccess, onFailure) {
       }
     }
   };
-  http.send(paramString); 
+  http.send(this.formData); 
 };

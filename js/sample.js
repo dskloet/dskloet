@@ -3,6 +3,11 @@ function getValue(id) {
   return element && element.value;
 }
 
+function getFile(id) {
+  var element = document.getElementById(id);
+  return element && element.files[0];
+}
+
 function onSearch(e) {
   e && e.preventDefault();
 
@@ -26,13 +31,21 @@ function onSearchResults(responseJson) {
   container.appendChild(list);
 }
 
+function withUploadUrl(handle) {
+  var ajax = new Ajax();
+  ajax.send('/uploadurl/', handle);
+}
+
 function onFormSubmit(e) {
   e.preventDefault();
 
-  var ajax = new Ajax();
-  var request = {first: getValue('first'), last: getValue('last')};
-  ajax.addParam('nameJson', JSON.stringify(request));
-  ajax.send('/hello', onResponse, onError);
+  withUploadUrl(function(uploadUrl) {
+    var ajax = new Ajax();
+    var request = {first: getValue('first'), last: getValue('last')};
+    ajax.addParam('nameJson', JSON.stringify(request));
+    ajax.addParam('photo', getFile('photo'));
+    ajax.send(uploadUrl, onResponse, onError);
+  });
 }
 
 function onResponse(response) {
